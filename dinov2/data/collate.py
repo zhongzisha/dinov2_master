@@ -10,8 +10,22 @@ import random
 def collate_data_and_cast(samples_list, mask_ratio_tuple, mask_probability, dtype, n_tokens=None, mask_generator=None):
     # dtype = torch.half  # TODO: Remove
 
+    # print(type(samples_list), len(samples_list))
+    # print(type(samples_list[0]), type(samples_list[1]))
+    # print(type(samples_list[0][0]))
+    # print(samples_list[0][0].keys())
+    # for k,v in samples_list[0][0].items():
+    #     print(k, type(v))
+    #     if k in ['global_crops', 'local_crops']:
+    #         print(k, len(v))
+    #         for i in range(len(v)):
+    #             print(v[i].shape)
+
     n_global_crops = len(samples_list[0][0]["global_crops"])
     n_local_crops = len(samples_list[0][0]["local_crops"])
+
+    # print('n_global_crops', n_global_crops)
+    # print('n_local_crops', n_local_crops)
 
     collated_global_crops = torch.stack([s[0]["global_crops"][i] for i in range(n_global_crops) for s in samples_list])
 

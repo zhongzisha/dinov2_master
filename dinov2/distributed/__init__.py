@@ -122,7 +122,7 @@ def _collect_env_vars() -> Dict[str, str]:
 
 
 def _is_slurm_job_process() -> bool:
-    return "SLURM_JOB_ID" in os.environ
+    return False #"SLURM_JOB_ID" in os.environ
 
 
 def _parse_slurm_node_list(s: str) -> List[str]:
@@ -161,6 +161,7 @@ class _TorchDistributedEnvironment:
             return self._set_from_slurm_env()
 
         env_vars = _collect_env_vars()
+        print('env_vars', env_vars)
         if not env_vars:
             # Environment is not set
             pass
@@ -244,6 +245,7 @@ def enable(*, set_cuda_current_device: bool = True, overwrite: bool = False, all
             current PyTorch CUDA device to the one matching the local rank.
         overwrite: If True, overwrites already set variables. Else fails.
     """
+    print('begin enable')
 
     global _LOCAL_RANK, _LOCAL_WORLD_SIZE
     if _LOCAL_RANK >= 0 or _LOCAL_WORLD_SIZE >= 0:
