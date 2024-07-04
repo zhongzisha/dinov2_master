@@ -256,7 +256,8 @@ def do_train(cfg, model, resume=False):
         cache_dir = os.path.join('/lscratch', os.environ['SLURM_JOB_ID'], 'cache_dir')
         os.makedirs(cache_dir, exist_ok=True)
 
-        dataset = (wds.WebDataset(
+        dataset = (
+            wds.WebDataset(
                 training_urls, 
                 resampled=True, 
                 cache_dir=cache_dir, 
@@ -393,6 +394,4 @@ def main(args):
 
 if __name__ == "__main__":
     args = get_args_parser(add_help=True).parse_args()
-    args.config_file = 'ssl_default_config_vit_small.yaml'
-    args.output_dir = '/lscratch/'+os.environ['SLURM_JOB_ID'] + '/output'
     main(args)

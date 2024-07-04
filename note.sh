@@ -11,11 +11,11 @@ else
 fi
 export OMP_NUM_THREADS=4
 
-DATA_DIR=/lscratch/$SLURM_JOB_ID/cache_dir/train
-torchrun --nproc_per_node 2 \
-    train_wds.py --config-file ssl_default_config_vit_small.yaml \
-    --output-dir /lscratch/$SLURM_JOB_ID/cache_dir/output \
-    train.dataset_path="${DATA_DIR}"
+OUTPUT_DIR=/data/zhongz2/temp29/dinov2_output
+mkdir -p ${OUTPUT_DIR}
+torchrun --nproc_per_node 4 \
+    train1.py --config-file ssl_default_config_vit_small.yaml \
+    --output-dir ${OUTPUT_DIR}
 
 
 

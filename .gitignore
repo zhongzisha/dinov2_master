@@ -9,3 +9,7 @@ dist/
 *.swp
 
 .vscode/
+.git/
+__pycache__/
+*~
+
