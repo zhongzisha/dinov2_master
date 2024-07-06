@@ -49,6 +49,40 @@ def get_count():
     with open(os.path.join(save_root, f'count{idr_torch.rank}.pkl'), 'wb') as fp:
         pickle.dump(arr, fp)
 
+def generate_fake_dataset():
+    import sys,os,glob,pickle,json,io,tarfile,time,gc
+    import numpy as np
+    from PIL import Image
+    save_root = os.path.join('/lscratch', os.environ['SLURM_JOB_ID'], 'fake_dataset')
+    os.makedirs(save_root, exist_ok=True)
+    num_tars = 10
+    count_dict = {}
+    for i in range(num_tars):
+        fh = io.BytesIO()
+        tar_fp = tarfile.open(fileobj=fh, mode='w:gz')
+        save_filepath = '{}/{:05d}.tar.gz'.format(save_root, i)
+        newsize = (256, 256)
+        num_imgs = np.random.randint(low=10, high=15)
+        label = 'c{:04d}'.format(i)
+        count_dict[label] = num_imgs
+        for j in range(num_imgs):
+            patch = Image.fromarray(np.random.randint(low=0, high=255, size=(256, 256, 3), dtype=np.uint8))
+            im_buffer = io.BytesIO()
+            patch.save(im_buffer, format='JPEG')
+            info = tarfile.TarInfo(name="{}/{:05d}.jpg".format(label, j))
+            info.size = im_buffer.getbuffer().nbytes
+            info.mtime = time.time()
+            im_buffer.seek(0)
+            tar_fp.addfile(info, im_buffer)
+        
+        tar_fp.close()
+        with open(save_filepath, 'wb') as fp:
+            fp.write(fh.getvalue())
+        del fh
+        gc.collect()
+    with open(os.path.join(save_root, 'count_dict.pkl'), 'wb') as fp:
+        pickle.dump(count_dict, fp)
+    print('total number of images: ', sum(list(count_dict.values())))
 
 def main_tar():
 
