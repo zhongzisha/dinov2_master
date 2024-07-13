@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=debug
 #SBATCh --mail-type=ALL
-#SBATCH --nodes=2
+#SBATCH --nodes=8
 #SBATCH --ntasks-per-node=1          # crucial - only 1 task per dist per node!
 #SBATCH --cpus-per-task=18
 #SBATCH --mem=64G

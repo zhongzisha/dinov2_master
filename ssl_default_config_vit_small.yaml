@@ -62,10 +62,10 @@ train:
   batch_size_per_gpu: 64
   dataset_path: ImageNet:split=TRAIN
   output_dir: .
-  saveckp_freq: 100
+  saveckp_freq: 1000
   seed: 0
   num_workers: 8
-  OFFICIAL_EPOCH_LENGTH: 1250
+  OFFICIAL_EPOCH_LENGTH: 310568
   cache_dataset: true
   centering: "sinkhorn_knopp" # or "sinkhorn_knopp" or centering
 student:

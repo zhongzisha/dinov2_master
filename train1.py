@@ -248,7 +248,7 @@ def do_train(cfg, model, resume=False):
             drop_last=True,
             collate_fn=collate_fn,
         )
-    else:
+    elif False:
         training_urls = "file:///data/zhongz2/tcga_tars/{00000..00512}.tar.gz"
         ntrain = 159011314  #  number of patches
 
@@ -272,6 +272,30 @@ def do_train(cfg, model, resume=False):
         data_loader = wds.WebLoader(dataset, batch_size=None, num_workers=cfg.train.num_workers)
         nbatches = max(1, ntrain // (cfg.train.batch_size_per_gpu * distributed.get_global_size()))
         data_loader = data_loader.with_epoch(nbatches)
+    else:
+        training_urls = "file:///data/zhongz2/tcga_tars/{00000..00511}.tar.gz"
+        ntrain = 159011314  #  number of patches
+
+        # Parameters
+        cache_dir = os.path.join('/lscratch', os.environ['SLURM_JOB_ID'], 'cache_dir')
+        os.makedirs(cache_dir, exist_ok=True)
+
+        dataset = (
+            wds.WebDataset(
+                training_urls, 
+                repeat=True,
+                resampled=True,
+                cache_size=2e11,   # 200G
+                cache_dir=cache_dir, 
+                shardshuffle=False, 
+                nodesplitter=wds.split_by_node
+            )
+            .shuffle(5000)
+            .decode("pil")
+            .map(make_sample)
+            .batched(cfg.train.batch_size_per_gpu, partial=False, collation_fn=collate_fn)
+        )
+        data_loader = wds.WebLoader(dataset, batch_size=None, num_workers=cfg.train.num_workers)
     # training loop
 
     iteration = start_iter
