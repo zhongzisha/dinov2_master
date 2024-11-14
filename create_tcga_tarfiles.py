@@ -158,8 +158,8 @@ def main_tar():
         gc.collect()
 
 if __name__ == '__main__':
-    # get_count()
-    main_tar()
+    get_count()
+    # main_tar()
 
 
 

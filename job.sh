@@ -7,7 +7,7 @@ if [ "$CLUSTER_NAME" == "FRCE" ]; then
     module load cuda/11.8
     module load cudnn/8.8.3-cuda11 
 else
-    source /data/zhongz2/anaconda3/bin/activate th21_ds
+    source /data/zhongz2/anaconda3/bin/activate th24
     module load CUDA/12.1
     module load cuDNN/8.9.2/CUDA-12
     module load gcc/11.3.0   
@@ -21,7 +21,7 @@ exit;
 
 
 sbatch --partition=multinode --mem=100G --gres=lscratch:100 --time=108:00:00 --cpus-per-task=1 --nodes=64 --ntasks-per-node=1 \
-    job.shx
+    job.sh
 
 
 
